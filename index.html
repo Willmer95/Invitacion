@@ -115,6 +115,7 @@ footer{padding:30px 0 50px;color:var(--soft);font-size:16px}
 
     <div class="card">
       <h3>Confirma tu asistencia</h3>
+      <p class="note" style="font-size:18px">Por favor confirma a más tardar <b>dos semanas antes</b> de la boda (30 de octubre de 2026).</p>
       <p class="note" style="font-size:18px">Marca con un check a quienes asistirán.</p>
       <div id="rows"></div>
       <button type="button" class="ghost" id="all" style="margin-top:14px;font-size:13px;padding:8px 14px">Marcar a todos</button>
@@ -135,10 +136,10 @@ var EVENT = new Date("2026-11-13T13:00:00-05:00");
 var $ = function(id){return document.getElementById(id)};
 var norm = function(s){return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()};
 function joinNames(a){ return a.length<2 ? a.join("") : a.slice(0,-1).join(", ")+" y "+a[a.length-1]; }
-var people = null;
+var people = null, gi = -1, opened = false, restoring = false;
 
 function setGroup(g){
-  people = g;
+  people = g; gi = GUESTS.indexOf(g);
   $("coverGuest").textContent = joinNames(g);
   $("finder").style.display = "none"; $("open").style.display = "inline-block";
   $("chips").innerHTML = ""; $("rows").innerHTML = "";
@@ -152,7 +153,8 @@ function setGroup(g){
   $("passInfo").innerHTML = "Invitación válida para <b>"+g.length+"</b> "+(g.length===1?"persona":"personas");
 }
 var m = (location.search + location.hash).match(/[?&#]g=(\d+)/);
-if (m && GUESTS[parseInt(m[1],10)-1]) setGroup(GUESTS[parseInt(m[1],10)-1]);
+var urlG = (m && GUESTS[parseInt(m[1],10)-1]) ? parseInt(m[1],10)-1 : null;
+if (urlG !== null) setGroup(GUESTS[urlG]);
 else {
   $("coverGuest").textContent = "Nos encantaría contar contigo";
   $("finder").style.display = "block"; $("open").style.display = "none";
@@ -165,7 +167,7 @@ else {
     });
   };
 }
-$("all").onclick = function(){ Array.prototype.forEach.call(document.querySelectorAll("#rows input"),function(c){c.checked=true}); };
+$("all").onclick = function(){ Array.prototype.forEach.call(document.querySelectorAll("#rows input"),function(c){c.checked=true}); save(); };
 
 // ===== Música suave (sin archivos externos) =====
 var ac, master, musicOn = false, nextT = 0, timer, bars = 0;
@@ -200,7 +202,7 @@ function bar(){
 function musicStart(){ if(!ac) return; try{ ac.resume(); musicOn = true; nextT = 0; clearTimeout(timer); bar(); $("music").style.opacity = 1; }catch(e){} }
 function musicStop(){ musicOn = false; clearTimeout(timer); $("music").style.opacity = .45; }
 function chime(){ if(!ac) return; try{ [783.99,1174.66,1567.98].forEach(function(f,i){ tone(f,ac.currentTime+i*0.18,2.4,0.07,"sine"); }); }catch(e){} }
-$("music").onclick = function(){ musicOn ? musicStop() : musicStart(); };
+$("music").onclick = function(){ if(musicOn){ musicStop(); } else { initAudio(); musicStart(); } };
 document.addEventListener("visibilitychange", function(){
   if(!ac) return;
   if(document.hidden) ac.suspend(); else if(musicOn) ac.resume();
@@ -218,8 +220,43 @@ function reveal(){
   setTimeout(function(){ $("main").classList.add("show"); },30);
   $("intro").classList.add("out");
   setTimeout(function(){ $("intro").style.display = "none"; },950);
-  musicStart(); chime();
+  musicStart(); chime(); save();
 }
+
+// ===== Recordar la visita por 1 hora =====
+var KEY = "wt_inv", HOUR = 3600000;
+function save(){
+  if(!opened || restoring) return;
+  try{
+    var c = Array.prototype.map.call(document.querySelectorAll("#rows input"), function(x){return x.checked});
+    localStorage.setItem(KEY, JSON.stringify({t:Date.now(), g:gi, y:Math.round(window.scrollY), c:c, m:$("msg").value}));
+  }catch(e){}
+}
+function resume(st){
+  restoring = true;
+  setGroup(GUESTS[st.g]);
+  Array.prototype.forEach.call(document.querySelectorAll("#rows input"), function(x,i){ x.checked = !!(st.c && st.c[i]); });
+  $("msg").value = st.m || "";
+  revealed = true; opened = true;
+  $("intro").style.display = "none"; $("cover").style.display = "none";
+  $("main").style.display = "block"; $("main").classList.add("show");
+  $("music").style.display = "block"; $("music").style.opacity = .45;
+  setTimeout(function(){ window.scrollTo(0, st.y || 0); }, 60);
+  setTimeout(function(){ restoring = false; }, 400);
+}
+var st = null;
+try{
+  st = JSON.parse(localStorage.getItem(KEY));
+  if(st && Date.now() - st.t > HOUR){ localStorage.removeItem(KEY); st = null; }
+}catch(e){ st = null; }
+if(st && GUESTS[st.g] && (urlG === null || urlG === st.g)) resume(st);
+var thr = 0;
+window.addEventListener("scroll", function(){ var n = Date.now(); if(n - thr > 500){ thr = n; save(); } });
+document.addEventListener("visibilitychange", function(){ if(document.hidden) save(); });
+window.addEventListener("pagehide", save);
+document.addEventListener("click", function(e){ if(e.target.closest && e.target.closest("a")) save(); });
+document.addEventListener("change", save);
+$("msg").addEventListener("input", save);
 $("open").onclick = function(){
   initAudio();
   var v = $("vid"), i = $("intro");
