@@ -211,7 +211,7 @@ document.addEventListener("visibilitychange", function(){
 // ===== Video de entrada y apertura =====
 var revealed = false;
 function reveal(){
-  if(revealed) return; revealed = true;
+  if(revealed) return; revealed = true; opened = true;
   try{ $("vid").pause(); }catch(e){}
   $("main").style.display = "block";
   $("cover").style.display = "none";
