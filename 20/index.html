@@ -169,7 +169,7 @@ var EVENT = new Date("2026-11-13T13:00:00-05:00");
 
 var $ = function(id){return document.getElementById(id)};
 var norm = function(s){return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase()};
-function joinNames(a){ return a.length<2 ? a.join("") : a.slice(0,-1).join(", ")+" y "+a[a.length-1]; }
+function joinNames(a){ return a.length<2 ? a.join("") : a.slice(0,-1).join(", ")+" e "+a[a.length-1]; }
 var people = null, gi = -1, opened = false, restoring = false;
 
 function setGroup(g){
