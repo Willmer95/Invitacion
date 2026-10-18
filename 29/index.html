@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="color-scheme" content="light">
-<title>Javier y Nidia · Invitación de boda</title>
+<title>Wilmer & Tatiana · Nuestra Boda</title>
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,500&family=Great+Vibes&display=swap" rel="stylesheet">
 <style>
 *{box-sizing:border-box}
@@ -104,7 +104,7 @@ textarea{color:#29362c}
   <svg class="cn bl" viewBox="0 0 200 200"><use href="#corner"/></svg><svg class="cn br" viewBox="0 0 200 200"><use href="#corner"/></svg>
   <svg class="rings" viewBox="0 0 170 100"><use href="#rg"/></svg>
   <div class="t1 sc gold">Nuestra Boda</div>
-  <h1 class="names sc gold">Javier &amp; Nidia</h1>
+  <h1 class="names sc gold">Wilmer &amp; Tatiana</h1>
   <div class="lbl">Estás invitado</div>
   <div class="guest" id="coverGuest"></div>
   <button id="open" class="btn pri" type="button">Abrir invitación</button>
@@ -115,7 +115,7 @@ textarea{color:#29362c}
     <svg class="cn tl" viewBox="0 0 200 200"><use href="#corner"/></svg><svg class="cn tr" viewBox="0 0 200 200"><use href="#corner"/></svg>
     <svg class="rings" viewBox="0 0 170 100" style="margin-top:30px"><use href="#rg"/></svg>
     <div class="t1 sc gold">Nuestra Boda</div>
-    <h2 class="names sc gold" style="margin-top:0">Javier &amp; Nidia</h2>
+    <h2 class="names sc gold" style="margin-top:0">Wilmer &amp; Tatiana</h2>
     <p style="margin:14px 20px">Este día muy especial estaremos junto a nuestros seres queridos.</p>
     <div class="band"><div class="s">Viernes</div><div class="d"><b class="gold">13</b><span>Noviembre 2026</span></div><div class="s">A la<br>1:00&nbsp;p.&nbsp;m.</div></div>
     <div class="count" id="count"></div>
@@ -127,7 +127,7 @@ textarea{color:#29362c}
     <p>Viernes 13 de noviembre</p>
     <p>1:00 p. m.</p>
     <a class="btn" target="_blank" rel="noopener" href="https://maps.app.goo.gl/YvP63VaPE2jmqiUn7">Ver ubicación</a>
-    <a class="btn" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda+Javier+y+Nidia&dates=20261113T180000Z/20261113T220000Z&location=Parroquia+Santo+Domingo+Savio">Agregar al calendario</a>
+    <a class="btn" target="_blank" rel="noopener" href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=Boda+Wilmer+y+Tatiana&dates=20261113T180000Z/20261113T220000Z&location=Parroquia+Santo+Domingo+Savio">Agregar al calendario</a>
   </div>
 
   <div class="card">
@@ -158,13 +158,13 @@ textarea{color:#29362c}
   <section class="sheet" style="padding:50px 22px 190px">
     <svg class="cn bl" viewBox="0 0 200 200"><use href="#corner"/></svg><svg class="cn br" viewBox="0 0 200 200"><use href="#corner"/></svg>
     <div class="sc gold" style="font-size:52px">Te esperamos</div>
-    <p style="margin:6px 0 0">Con cariño, Javier y Nidia</p>
+    <p style="margin:6px 0 0">Con cariño, Wilmer y Tatiana</p>
   </section>
 </main>
 </div>
 
 <script>
-var GUESTS = [["Milton Lopez","Diego Lopez"]];
+var GUESTS = [["Javier","Nidia"]];
 var EVENT = new Date("2026-11-13T13:00:00-05:00");
 
 var $ = function(id){return document.getElementById(id)};
@@ -292,7 +292,7 @@ function send(num){
   Array.prototype.forEach.call(document.querySelectorAll("#rows .row"), function(l){
     (l.querySelector("input").checked?yes:no).push(l.querySelector("span").textContent);
   });
-  var t = "Hola 💍 Confirmación de asistencia a la boda de Javier y Nidia, 13 de noviembre de 2026.\n";
+  var t = "Hola 💍 Confirmación de asistencia a la boda de Wilmer y Tatiana, 13 de noviembre de 2026.\n";
   if(yes.length) t += "✅ Asistirán ("+yes.length+"): "+yes.join(", ")+"\n";
   if(no.length) t += "❌ No podrán asistir: "+no.join(", ")+"\n";
   var m=$("msg").value.trim(); if(m) t += "Mensaje: "+m;
